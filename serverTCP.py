@@ -10,23 +10,23 @@ FILES_DIR = "ficheiros/"
 
 def worker(conn):
     files = os.listdir(FILES_DIR)
-    list = ""
-    for i in range(len(files)):
-        list += str(i) + " - " + files[i] + "\n"
+    lista = ""
+    for i, value in enumerate(files):
+        lista += str(i) + " - " + value + "\n"
     print(files)
     conn.send("File list\n".encode('utf-8'))
     while 1:
         try:
             print("-----")
-            conn.send(list.encode('utf-8'))
+            conn.send(lista.encode('utf-8'))
             resp = conn.recv(64)
             sendFile(int(resp.decode('utf-8')), files, conn)
         except:
             break
     print("Client disconnected")
 
-def main():
 
+def main():
     print("File Sharing\n")
     q = queue.Queue()
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -39,14 +39,13 @@ def main():
         q.put(t)
 
 
-
-def sendFile(id, files, conn):
-    if id < 0 or id > len(files) - 1:
+def sendFile(identificador, files, conn):
+    if identificador < 0 or identificador > len(files) - 1:
         conn.send("error".encode("utf-8"))
         return
     conn.send("accepted".encode("utf-8"))
-    conn.send(files[id].encode("utf-8"))
-    file_path = FILES_DIR + files[id]
+    conn.send(files[identificador].encode("utf-8"))
+    file_path = FILES_DIR + files[identificador]
     print("Sending file: " + file_path)
     file = open(file_path, "rb")
 
@@ -57,7 +56,7 @@ def sendFile(id, files, conn):
 
     file.close()
     # sinalizar fim do arquivo
-    #conn.send("end".encode("utf-8"))
+    # conn.send("end".encode("utf-8"))
     print("Ficheiro enviado")
 
 

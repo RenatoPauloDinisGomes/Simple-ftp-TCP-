@@ -1,5 +1,4 @@
 import socket
-import os
 import sys
 
 tcp_ip = "127.0.0.1"
@@ -36,7 +35,6 @@ def main():
             # receber ficheiro
             file = open(DIR_PATH + nome, "wb")
 
-            i = 0
             while True:
                 block = s.recv(1024)
                 print(sys.getsizeof(block))
